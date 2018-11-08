@@ -7,11 +7,26 @@ app.engine("ejs", ejs.renderFile);
 
 app.use(express.static("public"));
 
+var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.get("/", (req, res) => {
+  var msg = "メッセージを書いてください";
   res.render("index.ejs", {
     title: "Index",
-    content: "This is Express-app Top page",
-    link: { href: "/other?name=taro&pass=yamada", text: "別ページへ移動" }
+    content: msg
+  });
+});
+
+app.post("/", (req, res) => {
+  var msg =
+    "This is Posted Page<br>" +
+    "あなたは「" +
+    req.body.message +
+    "」と送信しました";
+  res.render("index.ejs", {
+    title: "Posted",
+    content: msg
   });
 });
 
