@@ -11,6 +11,11 @@
     </head>
     <div role="main">
       <p><%-content %></p>
+      <p><table style="width: 85%;">
+        <% for (var key in data) { %>
+        <%-include('data_item', {key:key, val:data[key]}) %>
+        <% } %>
+      </table></p>
       <form action="/" method="post">
       <p>
         <input type="text" name="message">
