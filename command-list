@@ -8,4 +8,4 @@ express -e app
 npm install
 
 # 実行
-node bin/www
+npm start
