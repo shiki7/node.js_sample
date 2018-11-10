@@ -1,11 +1,11 @@
-# express-generatorをインストール
+## express-generatorをインストール
 npm install -g express-generator
 
-# アプリを作成
+## アプリを作成
 express -e app
 
-# package.jsonを読み込み、パッケージをインストール
+## package.jsonを読み込み、パッケージをインストール
 npm install
 
-# 実行
+## 実行
 npm start
