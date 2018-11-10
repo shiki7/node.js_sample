@@ -1,3 +1,11 @@
+# express-generatorをインストール
 npm install -g express-generator
 
-express -e ex-gen-app
+# アプリを作成
+express -e app
+
+# package.jsonを読み込み、パッケージをインストール
+npm install
+
+# 実行
+node bin/www
