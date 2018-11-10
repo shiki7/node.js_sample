@@ -2,24 +2,25 @@ var express = require("express");
 var router = express.Router();
 
 /* GET home page. */
-router.get("/", function(req, res, next) {
-  // getパラメータ取得
-  // var name = req.query.name;
-  // var mail = req.query.mail;
+router.get("/", (req, res, next) => {
+  var msg = "なにか書いて";
+  if (req.session.message != undefined) {
+    msg = req.session.message;
+  }
   var data = {
     title: "Hello!",
-    // content: "your_name=" + name + "<br>your_mail_adress=" + mail
-    content: "なにか入力してください"
+    content: msg
   };
   res.render("hello", data);
 });
 
-router.post("/post", function(req, res, next) {
+router.post("/post", (req, res, next) => {
   // postを取得
   var msg = req.body["message"];
+  req.session.message = msg;
   var data = {
     title: "Hello!",
-    content: msg
+    content: req.session.message
   };
   res.render("hello", data);
 });

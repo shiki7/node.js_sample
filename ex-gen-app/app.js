@@ -8,7 +8,18 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var helloRouter = require("./routes/hello");
 
+var session = require("express-session");
+
 var app = express();
+
+// session setting
+var session_opt = {
+  secret: "secret_key",
+  resave: "false",
+  saveUninitialized: false,
+  cookie: { maxAge: 60 * 60 * 1000 }
+};
+app.use(session(session_opt));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
