@@ -77,4 +77,53 @@ router.get("/show", (req, res, next) => {
   connection.end();
 });
 
+// 指定レコードを編集
+router.get("/edit", (req, res, next) => {
+  var id = req.query.id;
+
+  var connection = mysql.createConnection(mysql_setting);
+
+  connection.connect();
+
+  connection.query(
+    "select * from mydata where id = ?",
+    id,
+    (error, results, fields) => {
+      if (error == null) {
+        var data = {
+          title: "Hello/edit",
+          content: "id=" + id + "のレコード",
+          mydata: results[0]
+        };
+        res.render("hello/edit", data);
+      }
+    }
+  );
+
+  connection.end();
+});
+
+// 編集フォーム送信の処理
+router.post("/edit", (req, res, next) => {
+  var id = req.body.id;
+  var nm = req.body.name;
+  var ml = req.body.mail;
+  var ag = req.body.age;
+  var data = { name: nm, mail: ml, age: ag };
+
+  var connection = mysql.createConnection(mysql_setting);
+
+  connection.connect();
+
+  connection.query(
+    "update mydata set ? where id = ?",
+    [data, id],
+    (error, results, fields) => {
+      res.redirect("/hello");
+    }
+  );
+
+  connection.end();
+});
+
 module.exports = router;
