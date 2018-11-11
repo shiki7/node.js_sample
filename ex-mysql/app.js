@@ -22,6 +22,10 @@ var session_opt = {
 };
 app.use(session(session_opt));
 
+// validator
+var validator = require("express-validator");
+app.use(validator());
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
