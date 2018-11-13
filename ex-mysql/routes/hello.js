@@ -10,17 +10,49 @@ var mysql_setting = {
   database: "my_nodeapp_db"
 };
 
-router.get("/", (req, res, next) => {
-  var connection = mysql.createConnection(mysql_setting);
-  connection.connect();
+var knex = require("knex")({
+  dialect: "mysql",
+  connection: {
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "my_nodeapp_db",
+    charset: "utf8"
+  }
+});
 
-  connection.query("Select * from mydata", (error, results, fields) => {
-    if (error == null) {
-      var data = { title: "mysql", content: results };
+var Bookshelf = require("bookshelf")(knex);
+
+var MyData = Bookshelf.Model.extend({
+  tableName: "mydata"
+});
+
+// router.get("/", (req, res, next) => {
+//   var connection = mysql.createConnection(mysql_setting);
+//   connection.connect();
+
+//   connection.query("Select * from mydata", (error, results, fields) => {
+//     if (error == null) {
+//       var data = { title: "mysql", content: results };
+//       res.render("hello/index", data);
+//     }
+//   });
+//   connection.end();
+// });
+
+router.get("/", (req, res, next) => {
+  new MyData()
+    .fetchAll()
+    .then(collection => {
+      var data = {
+        title: "Hello!",
+        content: collection.toArray()
+      };
       res.render("hello/index", data);
-    }
-  });
-  connection.end();
+    })
+    .catch(err => {
+      res.status(500).JSON({ error: true, data: { message: err.message } });
+    });
 });
 
 router.get("/add", (req, res, next) => {
