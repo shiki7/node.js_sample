@@ -65,46 +65,53 @@ router.get("/add", (req, res, next) => {
 });
 
 router.post("/add", (req, res, next) => {
-  req.check("name", "NAMEは必ず入力してください").notEmpty();
-  req.check("mail", "メールを入力してください").isEmail();
-  req.check("age", "年齢を入力してください").isInt();
-
-  req.getValidationResult().then(result => {
-    if (!result.isEmpty()) {
-      var re = '<ul class="error">';
-      var result_arr = result.array();
-      for (var n in result_arr) {
-        re += "<li>" + result_arr[n].msg + "</li>";
-      }
-      re += "</ul>";
-      var data = {
-        title: "Hello/Add",
-        content: re,
-        form: req.body
-      };
-      res.render("hello/add", data);
-    } else {
-      var nm = req.body.name;
-      var ml = req.body.mail;
-      var ag = req.body.age;
-      var data = { name: nm, mail: ml, age: ag };
-
-      var connection = mysql.createConnection(mysql_setting);
-
-      connection.connect();
-
-      connection.query(
-        "insert into mydata set ?",
-        data,
-        (error, results, fields) => {
-          res.redirect("/hello");
-        }
-      );
-
-      connection.end();
-    }
+  var response = res;
+  new MyData(req.body).save().then(model => {
+    response.redirect("/hello");
   });
 });
+
+// router.post("/add", (req, res, next) => {
+//   req.check("name", "NAMEは必ず入力してください").notEmpty();
+//   req.check("mail", "メールを入力してください").isEmail();
+//   req.check("age", "年齢を入力してください").isInt();
+
+//   req.getValidationResult().then(result => {
+//     if (!result.isEmpty()) {
+//       var re = '<ul class="error">';
+//       var result_arr = result.array();
+//       for (var n in result_arr) {
+//         re += "<li>" + result_arr[n].msg + "</li>";
+//       }
+//       re += "</ul>";
+//       var data = {
+//         title: "Hello/Add",
+//         content: re,
+//         form: req.body
+//       };
+//       res.render("hello/add", data);
+//     } else {
+//       var nm = req.body.name;
+//       var ml = req.body.mail;
+//       var ag = req.body.age;
+//       var data = { name: nm, mail: ml, age: ag };
+
+//       var connection = mysql.createConnection(mysql_setting);
+
+//       connection.connect();
+
+//       connection.query(
+//         "insert into mydata set ?",
+//         data,
+//         (error, results, fields) => {
+//           res.redirect("/hello");
+//         }
+//       );
+
+//       connection.end();
+//     }
+//   });
+// });
 
 router.get("/show", (req, res, next) => {
   var id = req.query.id;
