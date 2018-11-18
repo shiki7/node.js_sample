@@ -71,6 +71,31 @@ router.post("/add", (req, res, next) => {
   });
 });
 
+router.get("/find", (req, res, next) => {
+  var data = {
+    title: "Hello/find",
+    content: "検索IDを入力:",
+    form: { fstr: "" },
+    mydata: null
+  };
+  res.render("hello/find", data);
+});
+
+router.post("/find", (req, res, next) => {
+  new MyData()
+    .where("id", "=", req.body.fstr)
+    .fetch()
+    .then(collection => {
+      var data = {
+        title: "Hello!",
+        content: "※id = " + req.body.fstr + "の検索結果：",
+        form: req.body,
+        mydata: collection
+      };
+      res.render("hello/find", data);
+    });
+});
+
 // router.post("/add", (req, res, next) => {
 //   req.check("name", "NAMEは必ず入力してください").notEmpty();
 //   req.check("mail", "メールを入力してください").isEmail();
