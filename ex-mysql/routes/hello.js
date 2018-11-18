@@ -27,6 +27,8 @@ var MyData = Bookshelf.Model.extend({
   tableName: "mydata"
 });
 
+Bookshelf.plugin("pagination");
+
 // router.get("/", (req, res, next) => {
 //   var connection = mysql.createConnection(mysql_setting);
 //   connection.connect();
@@ -51,7 +53,29 @@ router.get("/", (req, res, next) => {
       res.render("hello/index", data);
     })
     .catch(err => {
-      res.status(500).JSON({ error: true, data: { message: err.message } });
+      res.status(500).json({ error: true, data: { message: err.message } });
+    });
+});
+
+router.get("/:page", (req, res, next) => {
+  var pg = req.params.page;
+  pg *= 1;
+  if (pg < 1) {
+    pg = 1;
+  }
+  new MyData()
+    .fetchPage({ page: pg, pageSize: 3 })
+    .then(collection => {
+      var data = {
+        title: "Hello!",
+        content: collection.toArray(),
+        pagination: collection.pagination
+      };
+      console.log(collection.pagination);
+      res.render("hello/index", data);
+    })
+    .catch(err => {
+      res.status(500).json({ error: true, data: { message: err.message } });
     });
 });
 
